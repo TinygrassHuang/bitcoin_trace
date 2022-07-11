@@ -53,13 +53,15 @@ class BitcoinTracer:
         data = json.loads(html_text)
         for i in data['unspent_outputs']:
             tx_id = i["tx_hash_big_endian"]
-            trans = Transaction(tx_id)
-            self.unspent_transactions.append(trans)
+            self.unspent_transactions.append(tx_id)
             self.unspent_bitcoin.append(float(i["value"]) / 100000000)
 
     def backward_trace(self, depth: int):
-        for tx_id in self.unspent_transactions:
+        for trans in self.unspent_transactions:
+            self.transverse_tree(trans, depth)
 
+    def transverse_tree(self, tx_id, depth):
+        pass
 
     def forward_trace(self, depth: int):
         raise NotImplementedError

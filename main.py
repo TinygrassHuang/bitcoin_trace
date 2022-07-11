@@ -74,6 +74,8 @@ for member in input_list("tr"):
     print(amount)
     print(flow)
 
+abc = tx_soup.find("table", class_="tx").span.text
+print(f"......{abc[1:-5]}......")
 
 # print(output_list.find_all("tr")[0].text)
 # print(output_list.find_all("td")[0])
@@ -92,9 +94,3 @@ for member in input_list("tr"):
 #     # time.sleep(1)
 # end = time.time()
 # print(end - start)
-
-html = requests.get("https://www.walletexplorer.com/address/1JdzjkxN9pAhmfRT6148UHsAPLM4QPYPqQ")
-print(html)
-
-ls = [[1,2,3],[1,2]]
-print(ls)
