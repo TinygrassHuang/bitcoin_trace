@@ -1,5 +1,5 @@
 import unittest
-from address import BitcoinAddress
+from util import BitcoinAddress
 
 class MyTestCase(unittest.TestCase):
     # def test_something(self):
