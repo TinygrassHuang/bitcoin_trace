@@ -1,71 +1,88 @@
 {
-  "hash": "a6914eb4ec59c3bb0e5d0d9b0eceb145a496f6624b3661f4aac84b9c070ac526",
-  "ver": 1,
-  "vin_sz": 1,
-  "vout_sz": 2,
-  "size": 225,
-  "weight": 900,
-  "fee": 100000,
-  "relayed_by": "0.0.0.0",
-  "lock_time": 0,
-  "tx_index": 1364086997879161,
-  "double_spend": false,
-  "time": 1472521727,
-  "block_index": 427449,
+  "found": true,
+  "txid": "3870a9c90877dd5655861d52fe57effabb29ca490a15d3c510c79140f5052bb0",
+  "is_coinbase": false,
+  "wallet_id": "271bcdd37405e1c9",
   "block_height": 427449,
-  "inputs": [
+  "block_pos": 76,
+  "time": 1472521727,
+  "size": 986,
+  "in": [
     {
-      "sequence": 4294967295,
-      "witness": "",
-      "script": "4730440220186dd03c69e4bc35afec8a1a308fd0151710ed78d2ecbcc943d390aba9513bae02207921a400e067fa2536a41beb1bf74212fb5b69f0ffa2def8ab5bcbdcac3e50b9012103e8a10ae714552099ebd0a19ba90d254384963ce6bd51f115b67fd52b7e5a6f71",
-      "index": 0,
-      "prev_out": {
-        "tx_index": 6198362561319480,
-        "value": 600000,
-        "n": 6,
-        "type": 0,
-        "spent": true,
-        "script": "76a9144f41c5340dadbeb44cffbe87ebb5a11cdb5ca88888ac",
-        "spending_outpoints": [
-          {
-            "tx_index": 1364086997879161,
-            "n": 0
-          }
-        ],
-        "addr": "18E5AxW8PzU2aF6jurqs6KEPTj9W123nhH"
-      }
+      "address": "16Gc8AdH28mcedkUBfyKhvJGP1RQtjnAf6",
+      "amount": 0.00138727,
+      "is_standard": true,
+      "next_tx": "48383b320c6b2fe1bb9fe97057c062cff320ef3ea86608c8213657506320f1cc"
+    },
+    {
+      "address": "1fTPgyXwLG6N6u6Z4HsK5VhHHN7JYn4D8",
+      "amount": 0.00138727,
+      "is_standard": true,
+      "next_tx": "531a5413c8e5ee6a45d9503cbdfec4f30129dba4e602521e1a5d8402e0ebf74a"
+    },
+    {
+      "address": "1LsNtsjo6RegZzr5dHFT9XNFBA2dUUtAPY",
+      "amount": 0.00178459,
+      "is_standard": true,
+      "next_tx": "9325ce8210e4c787bd5e55151649203cc0e35f6f103aa39980f3689903f81b03"
+    },
+    {
+      "address": "1B3sZwtgjdgHRuUM7VdZr3YieTpjBXoghw",
+      "amount": 0.00168526,
+      "is_standard": true,
+      "next_tx": "9632d1e4e08e10c21aea85c274fcc14b972f710414cdfad429cd7997104b727c"
+    },
+    {
+      "address": "13ct8MVEn5xCz8FkSqzSdqWk5CVMtkaSL3",
+      "amount": 0.00118861,
+      "is_standard": true,
+      "next_tx": "d1d73570d2ec8f3479a7e436dc7fdedfd370108ced6624b7bb4133543da322cf"
     }
   ],
   "out": [
     {
-      "type": 0,
-      "spent": true,
-      "value": 250000,
-      "spending_outpoints": [
-        {
-          "tx_index": 6029343256984127,
-          "n": 0
-        }
-      ],
-      "n": 0,
-      "tx_index": 1364086997879161,
-      "script": "76a91475f47f7e9d1b5abf83921f2bf612cf662850c4fd88ac",
-      "addr": "1BkgxTxcH56Tw6WZuxE2P76tbL2f1vYEuD"
+      "address": "12ktKrnhAPNuC9BADBrmsCHQmNcPTaJJ4P",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
     },
     {
-      "type": 0,
-      "spent": true,
-      "value": 250000,
-      "spending_outpoints": [
-        {
-          "tx_index": 6029343256984127,
-          "n": 1
-        }
-      ],
-      "n": 1,
-      "tx_index": 1364086997879161,
-      "script": "76a914ee37274400afea098a6943871c4f76eb48218e5188ac",
-      "addr": "1NiZtnE7cUseH3zy9e5cEUfYL7uAqPVpnP"
+      "address": "13RhirUmaVcLDzjK5uzQE6U9WkgBhnAcbp",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
+    },
+    {
+      "address": "1CADht6cxVigKuVaDn6CBcZtViBFUWUzhU",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
+    },
+    {
+      "address": "1EP2GoNq5UAZphszTPQgVjpB6XnHwYwMxC",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
+    },
+    {
+      "address": "1Hn4uw8gvRf5dP2RWQTVCmDg2X4xoHMjJB",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
+    },
+    {
+      "address": "1Lm8VUCnqUFy6CcQyntcc3kd9o949UPR9f",
+      "wallet_id": "31909fe07f601755",
+      "amount": 1.0e-5,
+      "is_standard": true
+    },
+    {
+      "address": "18E5AxW8PzU2aF6jurqs6KEPTj9W123nhH",
+      "wallet_id": "d739a21a699fa666",
+      "amount": 0.006,
+      "is_standard": true,
+      "next_tx": "a6914eb4ec59c3bb0e5d0d9b0eceb145a496f6624b3661f4aac84b9c070ac526"
     }
-  ]
+  ],
+  "updated_to_block": 745654
 }
