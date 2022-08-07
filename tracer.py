@@ -1,18 +1,7 @@
 import requests, json, time
-from util import make_request_and_sleep
+from util import make_request_and_sleep, check_address
 from node import TransactionNode
-
-
-def check_address(address: str) -> bool:
-    url = "https://www.blockchain.com/btc/address/"
-    html = requests.get(url + address)
-    if html.status_code == 404:
-        print(html)
-        return False
-    elif html.status_code == 200:
-        return True
-    print("Unexpected response:", html)
-    raise requests.exceptions.HTTPError
+from address_classifier import AddressClassifier
 
 
 class BitcoinTracer:
@@ -23,6 +12,8 @@ class BitcoinTracer:
     addr_result = None
     btc_result = None
     min_amount: float = None  # smallest unit of btc during tracing
+    classifier: AddressClassifier = None
+    addr_label_result = None
 
     def __init__(self, bitcoin_address: str, trace_depth: int, min_amount: float = 0):
         if check_address(bitcoin_address) is False:
@@ -37,6 +28,8 @@ class BitcoinTracer:
             self.__request_unspent_transactions()
         else:
             print("0 balance, no need to check anything")
+
+        self.classifier = AddressClassifier()
 
     def __check_zero_balance(self):
         url = "https://blockchain.info/q/addressbalance/" + self.address + "?confirmations=6"
@@ -70,6 +63,20 @@ class BitcoinTracer:
 
         return self.addr_result, self.btc_result
 
+    def classify_all_result_addr(self):
+        if self.addr_result is None:
+            print("You need to trace the money first!")
+        else:
+            print(f"Found {len(self.addr_result)} source address, might take around {len(self.addr_result)*10} seconds")
+            address_label = []
+            for i, addr in enumerate(self.addr_result):
+                label = self.classifier.classify(addr)
+                address_label.append(label)
+                print(f"{i + 1} done")
+
+            self.addr_label_result = address_label
+            return self.addr_label_result
+
 
 if __name__ == "__main__":
     # wrong_address = "3LaNNTg87XjTtXAqs55WV5DyWASEZizCXA"
@@ -82,7 +89,7 @@ if __name__ == "__main__":
     # 3LYJfcfHPXYJreMsASk2jkn69LWEYKzexb  a very rich address with 46 unspent txs
     # bc1qmxjefnuy06v345v6vhwpwt05dztztmx4g3y7wp another very rich address with 8 unspent
     tic = time.perf_counter()
-    trace_depth = 10
+    trace_depth = 2
     min_amount = 0.00000001
     tracer = BitcoinTracer("1Lm8VUCnqUFy6CcQyntcc3kd9o949UPR9f", trace_depth, min_amount=min_amount)
     # for tx in tracer.unspent_transactions:
@@ -97,3 +104,7 @@ if __name__ == "__main__":
     toc = time.perf_counter()
     print(f"Time spent {toc - tic:0.4f} seconds")
 
+    label = tracer.classify_all_result_addr()
+    print(label)
+    tac = time.perf_counter()
+    print(f"Time spent {tac - toc:0.4f} seconds")

@@ -1,7 +1,11 @@
 import json
+import os
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 import keras.models, joblib
 import numpy as np
+
 from math import ceil
 
 import requests
@@ -9,6 +13,11 @@ import time
 from bs4 import BeautifulSoup
 
 request_interval = 0.5
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+label_encoder = joblib.load("LabelEncoder.pkl")
+standard_scaler = joblib.load("StandardScaler.pkl")
+model = keras.models.load_model("bitcoin_address_classifier.h5")
 
 
 def make_request_and_sleep(url) -> str:
@@ -23,72 +32,6 @@ def make_request_and_sleep(url) -> str:
         raise requests.exceptions.HTTPError
 
 
-# run 10 seconds a time
-def get_bitcoin_address_feature(addr: str):
-    url = "https://blockchain.info/rawaddr/" + addr
-    text = make_request_and_sleep(url)
-    data = json.loads(text)
-
-    n_transactions = data["n_tx"]
-    tx_ls = data["txs"]
-
-    block_height_ls = []
-    fee_ls = []
-    size_ls = []
-    weight_ls = []
-    vin_sz_ls = []
-    vout_sz_ls = []
-    input_ls = []
-    output_ls = []
-
-    for tx in tx_ls:
-        block_height = tx["block_height"]
-        block_height_ls.append(block_height)
-        fee = tx["fee"]
-        fee_ls.append(fee)
-        size = tx["size"]
-        size_ls.append(size)
-        weight = tx["weight"]
-        weight_ls.append(weight)
-        vin_sz = tx["vin_sz"]
-        vin_sz_ls.append(vin_sz)
-        vout_sz = tx["vout_sz"]
-        vout_sz_ls.append(vout_sz)
-
-        input_amount = 0
-        for i in tx["inputs"]:
-            input_amount += i["prev_out"]["value"]
-        input_ls.append(input_amount)
-
-        output_amount = 0
-        for o in tx["out"]:
-            output_amount += o["value"]
-        output_ls.append(output_amount)
-
-    block_height_max_min = max(block_height_ls) - min(block_height_ls)
-    fee = compute_5_feature(fee_ls)
-    size = compute_5_feature(size_ls)
-    weight = compute_5_feature(weight_ls)
-    vin_sz = compute_5_feature(vin_sz_ls)
-    vout_sz = compute_5_feature(vout_sz_ls)
-    inputs = compute_5_feature(input_ls)
-    outputs = compute_5_feature(output_ls)
-
-    return [n_transactions] + [block_height_max_min] + fee + [
-        max(fee_ls) - min(fee_ls)] + size + weight + vin_sz + vout_sz + inputs + outputs
-
-
-# ['coinjoin-like' 'exchange' 'gambling' 'miner' 'mining_pool' 'services']
-def classify(addr: str):
-    label_encoder = joblib.load("LabelEncoder.pkl")
-    standard_scaler = joblib.load("StandardScaler.pkl")
-    model = keras.models.load_model("bitcoin_address_classifier.h5")
-    feature = get_bitcoin_address_feature(addr)
-    feature = standard_scaler.transform(feature)
-    prediction = np.argmax(model.predict(feature), axis=1)
-    return label_encoder.inverse_transform([prediction])[0]
-
-
 def compute_5_feature(feature_ls):
     ls = [np.mean(feature_ls),
           np.median(feature_ls),
@@ -99,12 +42,25 @@ def compute_5_feature(feature_ls):
     return ls
 
 
+def check_address(address: str) -> bool:
+    url = "https://www.blockchain.com/btc/address/"
+    html = requests.get(url + address)
+    if html.status_code == 404:
+        print(html)
+        return False
+    elif html.status_code == 200:
+        return True
+    print("Unexpected response:", html)
+    raise requests.exceptions.HTTPError
+
+
 class BitcoinAddress:
     address = None
     wallet = None
     url = None
     first_page = None
     total_trans = None
+
     transactions = []  # transaction history of an address, not the same as class Transaction
 
     def __init__(self, address: str):
@@ -162,8 +118,5 @@ if __name__ == "__main__":
     # print(len(my_address.transactions))
     # my_address.scrap_all_transactions()
     # print(len(my_address.transactions))
-    addr = "114ADriuRWjkdmADR1wfL4KDqttNxGjp3D"
-    # feature = get_bitcoin_address_feature(addr)
-    # print(feature)
-    # print(len(feature))
-    print(classify(addr))
+    addr = "1136GYGTdySKCocdjqZphXiW4zoskXHqML"
+

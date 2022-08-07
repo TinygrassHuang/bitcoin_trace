@@ -26,7 +26,7 @@ class TransactionNode:
         self.trans = Transaction(self.tx_id)
         self.depth = depth
         self.max_depth = max_depth
-        if self.depth == self.max_depth or self.leaf is True:
+        if self.depth == self.max_depth or self.leaf or self.trans.is_coinbase:
             self.leaf = True
             return
         self.__grow_tree()
@@ -57,20 +57,6 @@ class TransactionNode:
 
         return self.final_src_addr_list, self.final_src_amount_list
 
-    def __prettify(self):
-        # eliminate duplication in addresses and round value to 8 decimal places (1 satoshi)
-        address_map = {}
-        for i in range(len(self.final_src_addr_list)):
-            key = self.final_src_addr_list[i]
-            value = round(self.final_src_amount_list[i], 8)
-            if value == 0:
-                continue
-            if key in address_map:
-                address_map[key] = address_map[key] + value
-            else:
-                address_map[key] = value
-        return address_map
-
     def __transverse_get_source(self):
         # if self.source is None:
         if self.leaf is True:
@@ -89,6 +75,20 @@ class TransactionNode:
         self.final_src_amount_list = final_src_amount_list
         return self.final_src_addr_list, self.final_src_amount_list
 
+    def __prettify(self):
+        # eliminate duplication in addresses and round value to 8 decimal places (1 satoshi)
+        address_map = {}
+        for i in range(len(self.final_src_addr_list)):
+            key = self.final_src_addr_list[i]
+            value = round(self.final_src_amount_list[i], 8)
+            if value == 0:
+                continue
+            if key in address_map:
+                address_map[key] = address_map[key] + value
+            else:
+                address_map[key] = value
+        return address_map
+
 
 if __name__ == "__main__":
     # e159bd642ce8e7319d37f6b32456a59db02d7209871ae0baf2ee9bdf0283b67d
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     txid = "3870a9c90877dd5655861d52fe57effabb29ca490a15d3c510c79140f5052bb0"
     BTC = 0.00001
     min_amount = 0.00000001
-    source = TransactionNode(txid, BTC, min_amount, max_depth=5)
+    source = TransactionNode(txid, BTC, min_amount, max_depth=2)
     [addr_list, amount_list] = source.get_source()
     print("final addr", addr_list)
     print("final amount", amount_list)
