@@ -23,7 +23,8 @@ class AddressClassifier:
         return self.label_encoder.inverse_transform(prediction)[0]
 
     # run with 10s interval
-    def get_bitcoin_address_feature(self,addr: str):
+    @staticmethod
+    def get_bitcoin_address_feature(addr: str):
         url = "https://blockchain.info/rawaddr/" + addr
         html = requests.get(url)
         text = html.text
