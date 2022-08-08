@@ -25,6 +25,11 @@ class AddressClassifier:
     # run with 10s interval
     @staticmethod
     def get_bitcoin_address_feature(addr: str):
+        """
+        run with 10s interval to avoid getting banned by server
+        :param addr: btc address
+        :return: 38 address features
+        """
         url = "https://blockchain.info/rawaddr/" + addr
         html = requests.get(url)
         text = html.text
@@ -80,8 +85,9 @@ class AddressClassifier:
 
 
 if __name__ == "__main__":
-    addr = "1136GYGTdySKCocdjqZphXiW4zoskXHqML"
+    addr = "1KG85HFxqY7wQdt22mC76oKnmwi9wXX691"
     my_classifier = AddressClassifier()
     feature = my_classifier.get_bitcoin_address_feature(addr)
     print(feature)
+    print(len(feature))
     print(my_classifier.classify(addr))

@@ -3,6 +3,7 @@ import time
 import requests
 from address_classifier import AddressClassifier
 import pandas as pd
+from os.path import exists
 
 # total 10000 addresses:
 # 5 classes, 2000 addr per class, 10 entities per class
@@ -79,26 +80,52 @@ def get_label_addresses(save=False):
     if save is True:
         saveDF.to_csv("data/exchanges.csv", index=False)
 
-# 	n_transactions	block_height_max-min	fee_mean	fee_median	fee_std	fee_min	fee_max	fee_max-min	size_mean	size_median	size_std	size_min	size_max	weight_mean	weight_median	weight_std	weight_min	weight_max	confirmations_mean	confirmations_median	confirmations_std	confirmations_min	confirmations_max	vin_sz_mean	vin_sz_median	vin_sz_std	vin_sz_min	vin_sz_max	vout_sz_mean	vout_sz_median	vout_sz_std	vout_sz_min	vout_sz_max	inputsAmount_mean	inputsAmount_median	inputsAmount_std	inputsAmount_min	inputsAmount_max	outputsAmount_mean	outputsAmount_median	outputsAmount_std	outputsAmount_min	outputsAmount_max
+
+# 	n_transactions	block_height_max-min
+# 	fee_mean	fee_median	fee_std	fee_min	fee_max	fee_max-min
+# 	size_mean	size_median	size_std	size_min	size_max
+# 	weight_mean	weight_median	weight_std	weight_min	weight_max
+# 	vin_sz_mean	vin_sz_median	vin_sz_std	vin_sz_min	vin_sz_max
+# 	vout_sz_mean	vout_sz_median	vout_sz_std	vout_sz_min	vout_sz_max
+# 	inputsAmount_mean	inputsAmount_median	inputsAmount_std	inputsAmount_min	inputsAmount_max
+# 	outputsAmount_mean	outputsAmount_median	outputsAmount_std	outputsAmount_min	outputsAmount_max
 def compute_feature_sample(name: str):
     extra_header = ["n_transactions", "block_height_max-min",
-                    "fee_mean",	"fee_median","fee_std,fee_min",	"fee_max",	"fee_max-min",
-                    "size_mean","size_median",	"size_std",	"size_min",	"size_max",
-                    "weight_mean","weight_median","weight_std","weight_min","weight_max",
-                    "vin_sz_mean","vin_sz_median","vin_sz_std","vin_sz_min","vin_sz_max",
-                    "vout_sz_mean","vout_sz_median","vout_sz_std","vout_sz_min","vout_sz_max",
-                    "inputsAmount_mean","inputsAmount_median","inputsAmount_std","inputsAmount_min","inputsAmount_max",
-                    "outputsAmount_mean","outputsAmount_median","outputsAmount_std","outputsAmount_min","outputsAmount_max"]
-    # assert len(extra_header)==38
-    df = pd.read_csv("data/" + name + ".csv")
-    df["label"] = name
-    # df.iloc[2] = 2
-    print(df)
+                    "fee_mean", "fee_median", "fee_std", "fee_min", "fee_max", "fee_max-min",
+                    "size_mean", "size_median", "size_std", "size_min", "size_max",
+                    "weight_mean", "weight_median", "weight_std", "weight_min", "weight_max",
+                    "vin_sz_mean", "vin_sz_median", "vin_sz_std", "vin_sz_min", "vin_sz_max",
+                    "vout_sz_mean", "vout_sz_median", "vout_sz_std", "vout_sz_min", "vout_sz_max",
+                    "inputsAmount_mean", "inputsAmount_median", "inputsAmount_std", "inputsAmount_min",
+                    "inputsAmount_max",
+                    "outputsAmount_mean", "outputsAmount_median", "outputsAmount_std", "outputsAmount_min",
+                    "outputsAmount_max"]
+    assert len(extra_header) == 38
+
+    print(name)
+    if exists("data/" + name + "_full.csv"):
+        df = pd.read_csv("data/" + name + "_full.csv")
+    else:
+        df = pd.read_csv("data/" + name + ".csv")
+        df["label"] = name
+        df = df.reindex(df.columns.tolist() + extra_header, axis=1)
 
 
+    while (df["n_transactions"].isna().any()):
+        first_empty_index = df["n_transactions"].isna().argmax(axis=0)  # find where to start
+        feature = AddressClassifier.get_bitcoin_address_feature(df.iloc[first_empty_index, 1])
+        df.iloc[first_empty_index, 3:] = feature
+        df.to_csv("data/" + name + "_full.csv",index=False)
+        print(first_empty_index,"done")
+        print(feature)
+        print("------------------------------------")
+        time.sleep(10)
+
+
+
+# exchanges: half done, darknet: just started
 if __name__ == "__main__":
     # check file name before saving
     # get_label_addresses(save=False)
     name = ['exchanges', 'pool', 'services_others', 'gambling', 'darknet']
-    compute_feature_sample(name[0])
-    len(AddressClassifier.get_bitcoin_address_feature("1136GYGTdySKCocdjqZphXiW4zoskXHqML"))
+    compute_feature_sample(name[4])
