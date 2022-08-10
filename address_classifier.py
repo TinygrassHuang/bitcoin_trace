@@ -85,7 +85,8 @@ class AddressClassifier:
 
 
 if __name__ == "__main__":
-    addr = "1KG85HFxqY7wQdt22mC76oKnmwi9wXX691"
+    # 152f1muMCNa7goXYhYAQC61hxEgGacmncB  pool
+    addr = "152f1muMCNa7goXYhYAQC61hxEgGacmncB"
     my_classifier = AddressClassifier()
     feature = my_classifier.get_bitcoin_address_feature(addr)
     print(feature)
