@@ -110,22 +110,28 @@ def compute_feature_sample(name: str):
         df["label"] = name
         df = df.reindex(df.columns.tolist() + extra_header, axis=1)
 
-
     while (df["n_transactions"].isna().any()):
         first_empty_index = df["n_transactions"].isna().argmax(axis=0)  # find where to start
         feature = AddressClassifier.get_bitcoin_address_feature(df.iloc[first_empty_index, 1])
         df.iloc[first_empty_index, 3:] = feature
-        df.to_csv("data/" + name + "_full.csv",index=False)
-        print(first_empty_index,"done")
+        df.to_csv("data/" + name + "_full.csv", index=False)
+        print(first_empty_index, "done")
         print(feature)
         print("------------------------------------")
         time.sleep(10)
 
 
+def merge_all_data(save: bool):
+    name = ['exchanges', 'pool', 'services_others', 'gambling', 'darknet']
+    df = pd.concat([pd.read_csv("data/" + i + "_full.csv") for i in name], ignore_index=True)
+    print(df.shape)
+    if save:
+        df.to_csv("data/new_full_data.csv")
 
-# exchanges: half done, darknet: just started
+
 if __name__ == "__main__":
     # check file name before saving
     # get_label_addresses(save=False)
-    name = ['exchanges', 'pool', 'services_others', 'gambling', 'darknet']
-    compute_feature_sample(name[4])
+    # name = ['exchanges', 'pool', 'services_others', 'gambling', 'darknet']
+    # compute_feature_sample(name[2])
+    merge_all_data(save=False)
