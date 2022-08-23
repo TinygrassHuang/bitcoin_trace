@@ -21,7 +21,7 @@ class Transaction:
             html = make_request_and_sleep(self.url)
         except:
             print("too fast, sleeping")
-            time.sleep(5)
+            time.sleep(10)
             html = make_request_and_sleep(self.url)
         info = json.loads(html)
 

@@ -1,3 +1,4 @@
+import pandas as pd
 import requests, json, time
 from util import make_request_and_sleep, check_address
 from node import TransactionNode
@@ -77,6 +78,17 @@ class BitcoinTracer:
             self.addr_label_result = address_label
             return self.addr_label_result
 
+    def save_results(self):
+        if self.addr_result is None or self.addr_label_result is None:
+            print("You need to trace the money and classify results first")
+        else:
+            df = pd.DataFrame({"source_address": self.addr_result,
+                               "amount": self.btc_result,
+                               "label": self.addr_label_result,
+                               })
+            df.to_csv(f"result/{self.address}_{self.trace_depth}_{self.min_amount}.csv", index=False)
+            print(f"Trace result saved to: result/{self.address}_{self.trace_depth}_{self.min_amount}.csv")
+
 
 if __name__ == "__main__":
     # wrong_address = "3LaNNTg87XjTtXAqs55WV5DyWASEZizCXA"
@@ -86,12 +98,14 @@ if __name__ == "__main__":
 
     # 188VFs29DA34AVoPXsZWWacJ1aftxzL8Xm  0 balance
     # 1Lm8VUCnqUFy6CcQyntcc3kd9o949UPR9f
+    # 1ArJTD4iR3SCwjuyiP3H6pbwvPBHduX6WB
     # 3LYJfcfHPXYJreMsASk2jkn69LWEYKzexb  a very rich address with 46 unspent txs
     # bc1qmxjefnuy06v345v6vhwpwt05dztztmx4g3y7wp another very rich address with 8 unspent
     tic = time.perf_counter()
-    trace_depth = 2
-    min_amount = 0.00000001
-    tracer = BitcoinTracer("1Lm8VUCnqUFy6CcQyntcc3kd9o949UPR9f", trace_depth, min_amount=min_amount)
+    address = "bc1qmxjefnuy06v345v6vhwpwt05dztztmx4g3y7wp"
+    trace_depth = 7
+    min_amount = 100 * 100000000 * 0.00000001 # BTC
+    tracer = BitcoinTracer(address, trace_depth, min_amount=min_amount)
     # for tx in tracer.unspent_transactions:
     #     print(tx)
     # print(tracer.unspent_bitcoin)
@@ -99,12 +113,14 @@ if __name__ == "__main__":
     [source_addr, amount] = tracer.trace()
     for i in range(len(source_addr)):
         print(source_addr[i], amount[i])
-
     print("total number of source:", len(source_addr))
     toc = time.perf_counter()
     print(f"Time spent {toc - tic:0.4f} seconds")
 
-    label = tracer.classify_all_result_addr()
-    print(label)
-    tac = time.perf_counter()
-    print(f"Time spent {tac - toc:0.4f} seconds")
+    # label = tracer.classify_all_result_addr()
+    # print(label)
+    # tac = time.perf_counter()
+    # print(f"Time spent {tac - toc:0.4f} seconds")
+
+    # tracer.save_results()
+

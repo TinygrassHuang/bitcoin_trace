@@ -68,7 +68,7 @@ def get_label_addresses(save=False):
                 addr_ls.append(addr)
 
             print(id, len(addr_ls))
-            if id != "AntPool.com-old2":
+            if id != "AntPool.com-old2":  # this one only have 176
                 assert len(addr_ls) == 100
             df = pd.DataFrame({"entity": [id] * len(addr_ls),
                                "address": addr_ls,
