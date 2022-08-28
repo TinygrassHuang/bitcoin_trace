@@ -41,7 +41,6 @@ if __name__ == "__main__":
     depth_begin = 5
     depth_end = 10
     depth_list = range(depth_begin, depth_end+1)  # include end
-    depth_list = [4,5,6,7,8,9,10,12,15,20]
     # run programme with all the tracing depth values
     for i in depth_list:
         run_programme(address, i, min_BTC)
