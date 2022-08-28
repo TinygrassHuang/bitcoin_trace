@@ -1,6 +1,7 @@
 import time
 
 from postprocess import Postprocessor
+from search_report import ReportSearcher
 from tracer import BitcoinTracer
 
 
@@ -23,9 +24,12 @@ def run_programme(addr, trace_depth, min_amount):
 
     """ ------------------ Process ------------------------"""
     pp = Postprocessor(addr, trace_depth,min_amount)
-    pp.print_data()
+    # pp.print_data()
     pp.print_data_info()
     pp.plot(save=True)
+
+    report_searcher = ReportSearcher()
+    report_searcher.check_bitcoin_abuse(source_addr)
 
 
 if __name__ == "__main__":

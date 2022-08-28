@@ -50,7 +50,7 @@ class Postprocessor:
         fraction = [i / sum(value) for i in value]
 
         none_0_index = [i for i in range(len(value)) if value[i] != 0]
-        print([value[i] for i in none_0_index])
+        # print([value[i] for i in none_0_index])
 
         fig, ax = plt.subplots()
         ax.pie([fraction[i] for i in none_0_index],

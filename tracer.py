@@ -65,10 +65,13 @@ class BitcoinTracer:
         return self.addr_result, self.btc_result
 
     def classify_all_result_addr(self):
+        print("------------------------------")
         if self.addr_result is None:
             print("You need to trace the money first!")
         else:
-            print(f"Found {len(self.addr_result)} source address, might take around {len(self.addr_result)*10} seconds")
+            print(
+                f"Found {len(self.addr_result)} source address, "
+                f"might take around {len(self.addr_result) * 10} seconds to classify")
             address_label = []
             for i, addr in enumerate(self.addr_result):
                 label = self.classifier.classify(addr)
@@ -104,7 +107,7 @@ if __name__ == "__main__":
     tic = time.perf_counter()
     address = "bc1qmxjefnuy06v345v6vhwpwt05dztztmx4g3y7wp"
     trace_depth = 7
-    min_amount = 100 * 100000000 * 0.00000001 # BTC
+    min_amount = 100 * 100000000 * 0.00000001  # BTC
     tracer = BitcoinTracer(address, trace_depth, min_amount=min_amount)
     # for tx in tracer.unspent_transactions:
     #     print(tx)
@@ -123,4 +126,3 @@ if __name__ == "__main__":
     # print(f"Time spent {tac - toc:0.4f} seconds")
 
     # tracer.save_results()
-
