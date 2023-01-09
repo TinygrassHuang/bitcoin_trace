@@ -5,7 +5,7 @@
 
 This is bitcoin tracing software I developed during my master project. It can be used to trace and analyse any bitcoin
 fund present in a given bitcoin address. A list of source addresses will be extracted and classified. The classifier was
-trained by myself, the training data can be found in the project files. 
+trained by myself, the training data can be found in the project files. The final report was also included in the repository.
 
 ## To use it
 
